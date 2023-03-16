@@ -1,0 +1,7 @@
+Website = "https://gegenlicht.net"
+
+[Details]
+Icon = "res/Icon.png"
+Name = "Movie Transfer Preperation Tool"
+ID = "net.gegenlicht.movie-transfer-preperation-tool"
+Version = "0.1.0"
