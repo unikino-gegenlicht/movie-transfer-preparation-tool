@@ -11,17 +11,6 @@ type CustomTheme struct{}
 
 // change the default colors of texts and other widgets in the dark mode
 func (c CustomTheme) Color(name fyne.ThemeColorName, variant fyne.ThemeVariant) color.Color {
-	if variant == theme.VariantDark {
-		// return the color from the cd (#ffdd00)
-		return color.NRGBA{
-			R: 211,
-			G: 255,
-			B: 0,
-			A: 255,
-		}
-	} else if variant == theme.VariantLight {
-		return color.Black
-	}
 	return theme.DefaultTheme().Color(name, variant)
 }
 
@@ -54,3 +43,5 @@ func (c CustomTheme) Icon(name fyne.ThemeIconName) fyne.Resource {
 func (c CustomTheme) Size(name fyne.ThemeSizeName) float32 {
 	return theme.DefaultTheme().Size(name)
 }
+
+var _ fyne.Theme = (*CustomTheme)(nil)
