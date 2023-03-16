@@ -118,11 +118,13 @@ func init() {
 	semesterEndDay.TextStyle.Monospace = true
 
 	// now add those inputs to the form
+	ui.SemesterDataForm.Append("Zielgerät für Dateien", ui.FileDestinationSelector)
 	ui.SemesterDataForm.Append("Semester", semesterTitleEntry)
 	ui.SemesterDataForm.Append("Start der Vorführungen", semesterStartDay)
 	ui.SemesterDataForm.Append("Ende der Vorführungen", semesterEndDay)
 
-	mainContent := container.New(layout.NewMaxLayout(), ui.SemesterDataForm)
+	mainContent := container.New(layout.NewBorderLayout(ui.SemesterDataForm, nil, nil, nil),
+		ui.SemesterDataForm)
 	ui.MainWindow.SetContent(mainContent)
 	ui.MainWindow.SetMaster()
 	ui.MainWindow.SetIcon(resources.AppIcon)
