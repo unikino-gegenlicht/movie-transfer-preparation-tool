@@ -4,6 +4,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
+	"os"
 	"strconv"
 )
 
@@ -23,5 +24,13 @@ func init() {
 		return file + ":" + strconv.Itoa(line)
 	}
 	log.Logger = log.With().Caller().Stack().Logger()
+	// now overwrite the output to log to a file and to the console
+	logFile, _ := os.OpenFile("movie-transfer-preparation-tool.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 666)
+
+	log.Logger = log.Output(zerolog.MultiLevelWriter(
+		logFile,
+		zerolog.ConsoleWriter{
+			Out:        os.Stdout,
+			TimeFormat: "02.01.2006 15:04:05"}))
 	log.Info().Msg("Starting Movie Transfer Preparation Tool")
 }
