@@ -1,9 +1,12 @@
 package main
 
 import (
+	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/driver/desktop"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 	"github.com/rs/zerolog/pkgerrors"
+	"movie-transfer-preparation-tool/ui"
 	"os"
 	"strconv"
 )
@@ -33,4 +36,19 @@ func init() {
 			Out:        os.Stdout,
 			TimeFormat: "02.01.2006 15:04:05"}))
 	log.Info().Msg("Starting Movie Transfer Preparation Tool")
+}
+
+func init() {
+	// create a splash screen
+	drv := fyne.CurrentApp().Driver()
+	if drv, ok := drv.(desktop.Driver); ok {
+		ui.SplashScreen = drv.CreateSplashWindow()
+	} else {
+		log.Fatal().Msg("unable to create splash screen. unsupported client")
+	}
+
+	// now set the main window to be of a fixed size and resize it
+	ui.MainWindow.SetFixedSize(true)
+	ui.MainWindow.Resize(fyne.NewSize(800, 600))
+
 }
