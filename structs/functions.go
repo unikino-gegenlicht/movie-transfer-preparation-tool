@@ -3,6 +3,7 @@ package structs
 import (
 	"fmt"
 	"github.com/pkg/errors"
+	consts "movie-transfer-preparation-tool/const"
 	"os"
 	"path/filepath"
 )
@@ -26,4 +27,19 @@ func NewFileFromPath(path string) (*File, error) {
 	f.Size = fileStats.Size()
 	f.Extension = filepath.Ext(path)
 	return f, nil
+}
+
+func ConvertMovieToMovieConfigurationEntry(m Movie) *MovieConfigurationEntry {
+	// create a new movie configuration entry
+	e := new(MovieConfigurationEntry)
+	// assign the attributes from the movie to the configuration entry
+	e.Title = m.Title
+	e.ScreeningDateTime = e.ScreeningDateTime
+	e.MovieLanguage = m.AudioLanguage.Code
+	e.SubtitleLanguage = m.SubtitleLanguage.Code
+	// now build the directory path for the configuration entry
+	movieDateTime := e.ScreeningDateTime.Format(consts.DateTimeFormat)
+	dirPath := fmt.Sprintf("./%s – %s", movieDateTime, e.Title)
+	e.Path = dirPath
+	return e
 }
