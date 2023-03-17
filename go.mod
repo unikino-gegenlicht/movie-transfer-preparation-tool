@@ -11,7 +11,7 @@ require (
 	github.com/emvi/iso-639-1 v1.1.0
 	github.com/pkg/errors v0.9.1
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd
-	golang.org/x/sys v0.0.0-20220412211240-33da011f77ad
+	golang.org/x/sys v0.0.0-20220722155257-8c9f86f7a55f
 )
 
 require (
@@ -41,7 +41,7 @@ require (
 	github.com/yuin/goldmark v1.4.0 // indirect
 	golang.org/x/mobile v0.0.0-20211207041440-4e6c2922fdee // indirect
 	golang.org/x/net v0.0.0-20211118161319-6a13c67c3ce4 // indirect
-	golang.org/x/text v0.3.7 // indirect
+	golang.org/x/text v0.3.8 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/js/dom v0.0.0-20210725211120-f030747120f2 // indirect
 )
