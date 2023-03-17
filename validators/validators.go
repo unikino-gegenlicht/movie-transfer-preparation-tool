@@ -7,4 +7,4 @@ import (
 
 var NoEmptyOrWhitespaces = validation.NewRegexp(`[^\s]+`, "Eingabe erforderlich")
 var Date = validation.NewTime(consts.DateFormat)
-var DateTimeSpaced = validation.NewTime(consts.DateFormat + " " + consts.TimeFormat)
+var DateTimeSpaced = validation.NewTime(consts.DateTimeFormat)
