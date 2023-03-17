@@ -24,6 +24,7 @@ import (
 	"movie-transfer-preparation-tool/vars"
 	"os"
 	"strconv"
+	"time"
 )
 
 func init() {
@@ -51,6 +52,11 @@ func init() {
 			Out:        os.Stdout,
 			TimeFormat: "02.01.2006 15:04:05"}))
 	log.Info().Msg("Starting Movie Transfer Preparation Tool")
+}
+
+func init() {
+	config := structs.Configuration{}
+	bindings.Configuration.Set(&config)
 }
 
 func init() {
@@ -111,14 +117,42 @@ func init() {
 	// now create the input fields for the main semester data
 	semesterTitleEntry := widget.NewEntry()
 	semesterTitleEntry.Validator = validators.NoEmptyOrWhitespaces
+	semesterTitleEntry.OnChanged = func(s string) {
+		c, _ := bindings.Configuration.Get()
+		config := c.(*structs.Configuration)
+		config.Semester = s
+		bindings.Configuration.Set(config)
+	}
 
 	semesterStartDay := widget.NewEntry()
 	semesterStartDay.Validator = validators.Date
 	semesterStartDay.TextStyle.Monospace = true
+	semesterStartDay.OnChanged = func(s string) {
+		c, _ := bindings.Configuration.Get()
+		config := c.(*structs.Configuration)
+		// now try to parse the date
+		t, err := time.Parse(consts.DateTimeFormat, s)
+		if err != nil {
+			return
+		}
+		config.FirstScreening = t
+		bindings.Configuration.Set(config)
+	}
 
 	semesterEndDay := widget.NewEntry()
 	semesterEndDay.Validator = validators.Date
 	semesterEndDay.TextStyle.Monospace = true
+	semesterEndDay.OnChanged = func(s string) {
+		c, _ := bindings.Configuration.Get()
+		config := c.(*structs.Configuration)
+		// now try to parse the date
+		t, err := time.Parse(consts.DateTimeFormat, s)
+		if err != nil {
+			return
+		}
+		config.LastScreening = t
+		bindings.Configuration.Set(config)
+	}
 
 	// now add those inputs to the form
 	ui.SemesterDataForm.Append("Zielgerät für Dateien", ui.FileDestinationSelector)
