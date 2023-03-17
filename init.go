@@ -19,6 +19,7 @@ import (
 	"movie-transfer-preparation-tool/resources"
 	"movie-transfer-preparation-tool/structs"
 	"movie-transfer-preparation-tool/ui"
+	"movie-transfer-preparation-tool/utilities"
 	"movie-transfer-preparation-tool/validators"
 	"movie-transfer-preparation-tool/vars"
 	"os"
@@ -212,8 +213,16 @@ func init() {
 
 	mainWindowHeader := container.New(layout.NewVBoxLayout(), ui.SemesterDataForm, addMovieButton)
 
-	mainContent := container.New(layout.NewBorderLayout(mainWindowHeader, nil, nil, nil),
-		mainWindowHeader, movieDataTable)
+	// now create a button which triggers the writing process of all files and the configuration
+	writeDataButton := new(widget.Button)
+	writeDataButton.SetText("Dateien übertragen")
+	writeDataButton.SetIcon(ui.CustomTheme{}.Icon(theme.IconNameDocumentSave))
+	writeDataButton.IconPlacement = widget.ButtonIconLeadingText
+	writeDataButton.Importance = widget.HighImportance
+	writeDataButton.OnTapped = utilities.WriteFilesToDisk
+
+	mainContent := container.New(layout.NewBorderLayout(mainWindowHeader, writeDataButton, nil, nil),
+		mainWindowHeader, movieDataTable, writeDataButton)
 	ui.MainWindow.SetContent(mainContent)
 	ui.MainWindow.SetMaster()
 	ui.MainWindow.SetIcon(resources.AppIcon)
