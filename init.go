@@ -163,6 +163,18 @@ func init() {
 				}
 			}
 		})
+	// now measure some texts to allow the correct table layout for all columns
+	dateColumnWidth := fyne.MeasureText("01.01.2009", 16, fyne.TextStyle{Monospace: true}).Width
+	languageWidth := fyne.MeasureText("Old Church Slavonic", 16, fyne.TextStyle{Monospace: true}).Width
+
+	// now calculate the width of the title column
+	titleColumnWidth := 800 - dateColumnWidth - languageWidth - languageWidth - 48
+
+	// now resize the columns
+	movieDataTable.SetColumnWidth(0, titleColumnWidth)
+	movieDataTable.SetColumnWidth(1, dateColumnWidth)
+	movieDataTable.SetColumnWidth(2, languageWidth)
+	movieDataTable.SetColumnWidth(3, languageWidth)
 
 	mainWindowHeader := container.New(layout.NewVBoxLayout(), ui.SemesterDataForm, addMovieButton)
 
