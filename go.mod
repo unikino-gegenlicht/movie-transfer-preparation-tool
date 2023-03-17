@@ -6,6 +6,7 @@ require github.com/rs/zerolog v1.29.0
 
 require (
 	fyne.io/fyne/v2 v2.3.1
+	fyne.io/x/fyne v0.0.0-20230128220048-43a1c4cd1ed8
 	github.com/emvi/iso-639-1 v1.1.0
 	github.com/pkg/errors v0.9.1
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd
@@ -30,6 +31,7 @@ require (
 	github.com/jsummers/gobmp v0.0.0-20151104160322-e2ba15ffa76e // indirect
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/srwiley/oksvg v0.0.0-20220731023508-a61f04f16b76 // indirect
 	github.com/srwiley/rasterx v0.0.0-20210519020934-456a8d69b780 // indirect
