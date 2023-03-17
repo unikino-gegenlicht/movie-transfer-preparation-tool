@@ -123,8 +123,17 @@ func init() {
 	ui.SemesterDataForm.Append("Start der Vorführungen", semesterStartDay)
 	ui.SemesterDataForm.Append("Ende der Vorführungen", semesterEndDay)
 
-	mainContent := container.New(layout.NewBorderLayout(ui.SemesterDataForm, nil, nil, nil),
-		ui.SemesterDataForm)
+	// now create a button containing a popup which allows adding movies to the application
+	addMovieButton := widget.NewButtonWithIcon(
+		"Film hinzufügen",
+		ui.CustomTheme{}.Icon(theme.IconNameContentAdd),
+		ui.AddMovieOnClick)
+	addMovieButton.Importance = widget.HighImportance
+
+	mainWindowHeader := container.New(layout.NewVBoxLayout(), ui.SemesterDataForm, addMovieButton)
+
+	mainContent := container.New(layout.NewBorderLayout(mainWindowHeader, nil, nil, nil),
+		mainWindowHeader)
 	ui.MainWindow.SetContent(mainContent)
 	ui.MainWindow.SetMaster()
 	ui.MainWindow.SetIcon(resources.AppIcon)

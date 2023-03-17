@@ -13,11 +13,11 @@ type Movie struct {
 
 	// AudioLanguage contains the main language of the movie as the ISO 639-1
 	// two character code
-	AudioLanguage iso6391.Language
+	AudioLanguage *iso6391.Language
 
 	// SubtitleLanguage contains the main language of the subtitles as the ISO
 	// 639-1 two character code.
-	SubtitleLanguage iso6391.Language
+	SubtitleLanguage *iso6391.Language
 
 	// VideoFile contains the file information for the movie file
 	VideoFile File
