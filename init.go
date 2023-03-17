@@ -202,7 +202,7 @@ func init() {
 	languageWidth := fyne.MeasureText("Old Church Slavonic", 16, fyne.TextStyle{Monospace: true}).Width
 
 	// now calculate the width of the title column
-	titleColumnWidth := 800 - dateColumnWidth - languageWidth - languageWidth - 48
+	titleColumnWidth := 800 - dateColumnWidth - languageWidth - languageWidth - 32
 
 	// now resize the columns
 	movieDataTable.SetColumnWidth(0, titleColumnWidth)
