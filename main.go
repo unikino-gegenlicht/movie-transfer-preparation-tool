@@ -7,6 +7,7 @@ import (
 	"movie-transfer-preparation-tool/ui"
 	"movie-transfer-preparation-tool/utilities"
 	"movie-transfer-preparation-tool/vars"
+	"strings"
 	"time"
 )
 
@@ -29,6 +30,10 @@ func main() {
 			}
 			ui.FileDestinationSelector.Options = options
 		}))
+		ui.FileDestinationSelector.OnChanged = func(selection string) {
+			fields := strings.Fields(selection)
+			bindings.SelectedDrive.Set(fields[0])
+		}
 		bindings.ExternalDrives.Set(utilities.GetExternalDrives())
 		// todo: remove sleeps and mock steps
 		time.Sleep(1 * time.Second)
