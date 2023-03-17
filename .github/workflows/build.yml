@@ -24,8 +24,11 @@ jobs:
       - name: Get Golang dependencies
         run: go get -v -t -d ./...
 
+      - name: Install Fyne.io
+        run: go get fyne.io/fyne/v2/cmd/fyne
+
       - name: Build for Linux
-        run: go build -o bin/movieTransferPreparationTool-linux -v ./...
+        run: fyne package --release -appID net.gegenlicht.movieTransferPreparationTool -icon resources/icon.png -name movieTransferPreparationTool
 
       
 
@@ -43,8 +46,11 @@ jobs:
       - name: Get Golang dependencies
         run: go get -v -t -d ./...
 
+      - name: Install Fyne.io
+        run: go get fyne.io/fyne/v2/cmd/fyne
+
       - name: Build for Windows
-        run: go build -o bin/movieTransferPreparationTool-win.exe -v ./...
+        run: fyne package --release -appID net.gegenlicht.movieTransferPreparationTool -icon resources/icon.png -name movieTransferPreparationTool
 
       - name: Create Artifact
         uses: actions/upload-artifact@v2
