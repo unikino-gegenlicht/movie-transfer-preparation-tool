@@ -2,20 +2,27 @@ package ui
 
 import (
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
 	iso6391 "github.com/emvi/iso-639-1"
+	"movie-transfer-preparation-tool/bindings"
+	consts "movie-transfer-preparation-tool/const"
 	"movie-transfer-preparation-tool/structs"
 	"movie-transfer-preparation-tool/validators"
+	"time"
 )
+
+var movieDataForm *widget.Form
+var newMovie *structs.Movie
 
 func AddMovieOnClick() {
 	// create a new form for the needed data and create a object storing the movie information
-	movieDataForm := new(widget.Form)
-	newMovie := new(structs.Movie)
+	movieDataForm = new(widget.Form)
+	newMovie = new(structs.Movie)
 
 	// create entries for the needed data
-	movieNameEntry := widget.NewEntry()
+	movieNameEntry := widget.NewEntryWithData(binding.BindString(&newMovie.Title))
 	movieNameEntry.SetPlaceHolder("Der Herr der Ringe")
 	movieNameEntry.Validator = validators.NoEmptyOrWhitespaces
 	movieDataForm.Append("Titel", movieNameEntry)
@@ -56,13 +63,16 @@ func AddMovieOnClick() {
 		"Hinzufügen",
 		"Abbrechen",
 		movieDataForm,
-		movieFormSubmitted,
+		func(confirmed bool) {
+			if !confirmed {
+				return
+			}
+			// parse the date to a time.Time object
+			newMovie.ScreeningDate, _ = time.Parse(consts.DateTimeFormat, movieScreeningDateEntry.Text)
+			bindings.Movies.Append(newMovie)
+		},
 		MainWindow,
 	)
 	movieDataPopup.Resize(fyne.NewSize(600, 350))
 	movieDataPopup.Show()
-}
-
-func movieFormSubmitted(confirmed bool) {
-
 }

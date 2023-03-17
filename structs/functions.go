@@ -38,7 +38,7 @@ func ConvertMovieToMovieConfigurationEntry(m Movie) *MovieConfigurationEntry {
 	e.MovieLanguage = m.AudioLanguage.Code
 	e.SubtitleLanguage = m.SubtitleLanguage.Code
 	// now build the directory path for the configuration entry
-	movieDateTime := e.ScreeningDateTime.Format(consts.DateTimeFormat)
+	movieDateTime := e.ScreeningDateTime.Format(consts.DateTimeFolderFormat)
 	dirPath := fmt.Sprintf("./%s – %s", movieDateTime, e.Title)
 	e.Path = dirPath
 	return e
