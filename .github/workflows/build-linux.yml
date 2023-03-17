@@ -23,7 +23,7 @@ jobs:
         run: go get -v -t -d ./...
 
       - name: Build for Linux
-        run: go build -o movieTransferPreparationTool -ldflags "-s -w" ./...
+        run: go build -v ./...
 
       - name: Create Artifact
         uses: actions/upload-artifact@v2
@@ -32,7 +32,7 @@ jobs:
           path: movieTransferPreparationTool
 
       - name: Build for Windows
-        run: GOOS=windows GOARCH=amd64 go build -o movieTransferPreparationTool.exe -ldflags "-s -w" ./...
+        run: GOOS=windows GOARCH=amd64 go build -v ./...
 
       - name: Create Artifact
         uses: actions/upload-artifact@v2
