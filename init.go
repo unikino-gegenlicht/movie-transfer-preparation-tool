@@ -15,7 +15,9 @@ import (
 	"golang.org/x/image/colornames"
 	"image/color"
 	"movie-transfer-preparation-tool/bindings"
+	consts "movie-transfer-preparation-tool/const"
 	"movie-transfer-preparation-tool/resources"
+	"movie-transfer-preparation-tool/structs"
 	"movie-transfer-preparation-tool/ui"
 	"movie-transfer-preparation-tool/validators"
 	"movie-transfer-preparation-tool/vars"
@@ -147,6 +149,7 @@ func init() {
 			if id.Row == 0 {
 				// now switch around the columns to set up the header
 				l.TextStyle.Bold = true
+				l.Alignment = fyne.TextAlignCenter
 				switch id.Col {
 				case 0:
 					l.SetText("Titel")
@@ -161,7 +164,38 @@ func init() {
 					l.SetText("Untertitel")
 					break
 				}
+				return
 			}
+			// now get the movie which corresponds to the id
+			item, _ := bindings.Movies.GetValue(id.Row - 1)
+			movie := item.(*structs.Movie)
+			// now switch through the columns again and set the data
+			switch id.Col {
+			case 0:
+				l.SetText(movie.Title)
+				break
+			case 1:
+				l.SetText(movie.ScreeningDate.Format(consts.DateFormat))
+				l.TextStyle.Monospace = true
+				break
+			case 2:
+				if movie.AudioLanguage == nil {
+					l.SetText("N/A")
+				} else {
+					l.SetText(movie.AudioLanguage.Name)
+				}
+				l.TextStyle.Monospace = true
+				break
+			case 3:
+				if movie.SubtitleLanguage == nil {
+					l.SetText("N/A")
+				} else {
+					l.SetText(movie.SubtitleLanguage.Name)
+				}
+				l.TextStyle.Monospace = true
+				break
+			}
+
 		})
 	// now measure some texts to allow the correct table layout for all columns
 	dateColumnWidth := fyne.MeasureText("01.01.2009", 16, fyne.TextStyle{Monospace: true}).Width
