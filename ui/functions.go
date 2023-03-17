@@ -5,11 +5,14 @@ import (
 	"fyne.io/fyne/v2/data/binding"
 	"fyne.io/fyne/v2/dialog"
 	"fyne.io/fyne/v2/widget"
+	xwidget "fyne.io/x/fyne/widget"
 	iso6391 "github.com/emvi/iso-639-1"
+	_ "github.com/rs/zerolog/log"
 	"movie-transfer-preparation-tool/bindings"
 	consts "movie-transfer-preparation-tool/const"
 	"movie-transfer-preparation-tool/structs"
 	"movie-transfer-preparation-tool/validators"
+	"strings"
 	"time"
 )
 
@@ -36,36 +39,80 @@ func AddMovieOnClick() {
 	languageSelectionOptions := append([]string{"NONE"}, iso6391.Names...)
 
 	// now create the selection fields for the languages
-	audioLanguageSelect := widget.NewSelect(languageSelectionOptions, func(selection string) {
-		// resolve the selected language to the code
-		if selection == "NONE" {
-			newMovie.AudioLanguage = nil
-		} else {
-			language := iso6391.FromName(selection)
-			newMovie.AudioLanguage = &language
+	audioLanguageSelect := xwidget.NewCompletionEntry(languageSelectionOptions)
+	audioLanguageSelect.OnChanged = func(s string) {
+		if len(s) < 2 {
+			audioLanguageSelect.HideCompletion()
+			return
 		}
-	})
+
+		var possibleLanguages []string
+
+		for _, lang := range languageSelectionOptions {
+			if strings.Contains(strings.ToLower(lang), strings.ToLower(s)) {
+				possibleLanguages = append(possibleLanguages, lang)
+			}
+		}
+
+		if len(possibleLanguages) == 0 {
+			audioLanguageSelect.HideCompletion()
+			return
+		}
+
+		audioLanguageSelect.SetOptions(possibleLanguages)
+		audioLanguageSelect.ShowCompletion()
+	}
 	movieDataForm.Append("Sprache der Tonspur", audioLanguageSelect)
 
-	subtitleLanguageSelect := widget.NewSelect(languageSelectionOptions, func(selection string) {
-		// resolve the selected language to the code
-		if selection == "NONE" {
-			newMovie.SubtitleLanguage = nil
-		} else {
-			language := iso6391.FromName(selection)
-			newMovie.SubtitleLanguage = &language
+	subtitleLanguageSelect := xwidget.NewCompletionEntry(languageSelectionOptions)
+	subtitleLanguageSelect.OnChanged = func(s string) {
+		if len(s) < 2 {
+			subtitleLanguageSelect.HideCompletion()
+			return
 		}
-	})
+
+		var possibleLanguages []string
+
+		for _, lang := range languageSelectionOptions {
+			if strings.Contains(strings.ToLower(lang), strings.ToLower(s)) {
+				possibleLanguages = append(possibleLanguages, lang)
+			}
+		}
+
+		if len(possibleLanguages) == 0 {
+			subtitleLanguageSelect.HideCompletion()
+			return
+		}
+
+		subtitleLanguageSelect.SetOptions(possibleLanguages)
+		subtitleLanguageSelect.ShowCompletion()
+	}
 	movieDataForm.Append("Sprache der Untertitel", subtitleLanguageSelect)
 
-	movieDataPopup := dialog.NewCustomConfirm(
+	movieDataPopup := dialog.NewForm(
 		"Metadaten erfassen",
 		"Hinzufügen",
 		"Abbrechen",
-		movieDataForm,
+		movieDataForm.Items,
 		func(confirmed bool) {
 			if !confirmed {
 				return
+			}
+			// get the name of the language and put it into the movie
+			audioLang := audioLanguageSelect.Text
+			if audioLang == "NONE" {
+				newMovie.AudioLanguage = nil
+			} else {
+				al := iso6391.FromName(audioLang)
+				newMovie.AudioLanguage = &al
+			}
+			// get the name of the language and put it into the movie
+			subLang := audioLanguageSelect.Text
+			if subLang == "NONE" {
+				newMovie.SubtitleLanguage = nil
+			} else {
+				sl := iso6391.FromName(subLang)
+				newMovie.SubtitleLanguage = &sl
 			}
 			// parse the date to a time.Time object
 			newMovie.ScreeningDate, _ = time.Parse(consts.DateTimeFormat, movieScreeningDateEntry.Text)
