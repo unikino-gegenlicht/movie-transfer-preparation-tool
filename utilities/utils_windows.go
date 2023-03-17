@@ -7,6 +7,8 @@ import (
 	"github.com/rs/zerolog/log"
 	"os/exec"
 	"strings"
+	"syscall"
+	"unsafe"
 )
 
 // GetExternalDrives gets all external drives connected to a windows machine but excludes C: as it is the
@@ -42,4 +44,22 @@ func GetExternalDrives() [][]string {
 		drives = append(drives, []string{fields[1], fields[2]})
 	}
 	return drives
+}
+
+func GetAvailableSpace(disk string) uint64 {
+	var freeBytes int64
+	var totalBytes int64
+	var availableBytes int64
+
+	kernel32 := syscall.NewLazyDLL("kernel32.dll")
+	getDiskFreeSpaceEx := kernel32.NewProc("GetDiskFreeSpaceExW")
+
+	_, _, _ = getDiskFreeSpaceEx.Call(
+		uintptr(unsafe.Pointer(syscall.StringToUTF16Ptr(disk))),
+		uintptr(unsafe.Pointer(&freeBytes)),
+		uintptr(unsafe.Pointer(&totalBytes)),
+		uintptr(unsafe.Pointer(&availableBytes)),
+	)
+
+	return uint64(freeBytes)
 }
