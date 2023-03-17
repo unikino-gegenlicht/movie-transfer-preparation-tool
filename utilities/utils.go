@@ -16,6 +16,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -117,6 +118,8 @@ func WriteFilesToDisk() {
 
 	// now start iterating over the created movies
 	for _, m := range movies {
+		// create a waitgroup
+		wg := sync.WaitGroup{}
 		// typecast the movie into the struct
 		movie := m.(*structs.Movie)
 		// now convert the movie into a configuration entry
@@ -182,12 +185,14 @@ func WriteFilesToDisk() {
 			}
 		}()
 		go func() {
+			wg.Add(1)
 			_, err = io.Copy(movieFileWriter, originMovieFile)
 			if err != nil {
 				if err == context.Canceled {
 					log.Info().Msg("user cancelled copy progress")
 				}
 			}
+			wg.Done()
 		}()
 		if movie.SubtitleLanguage != nil {
 			// since we now have the configEntry we now can write the files to the target directory
@@ -234,15 +239,29 @@ func WriteFilesToDisk() {
 				}
 			}()
 			go func() {
+				wg.Add(1)
 				_, err = io.Copy(subtitleFileWriter, originSubtitleFile)
 				if err != nil {
 					if err == context.Canceled {
 						log.Info().Msg("user cancelled copy progress")
 					}
 				}
+				wg.Done()
+			}()
+			log.Info().Msg("waiting until this movie is copied")
+			go func() {
+				wg.Wait()
+				// now close the open files
+				subtitleTargetFile.Close()
+				originSubtitleFile.Close()
 			}()
 		}
-
+		go func() {
+			wg.Wait()
+			// now close the open files
+			movieTargetFile.Close()
+			originMovieFile.Close()
+		}()
 	}
 
 }
