@@ -7,11 +7,13 @@ import (
 	"fyne.io/fyne/v2/widget"
 	xwidget "fyne.io/x/fyne/widget"
 	iso6391 "github.com/emvi/iso-639-1"
+	"github.com/rs/zerolog/log"
 	_ "github.com/rs/zerolog/log"
 	"movie-transfer-preparation-tool/bindings"
 	consts "movie-transfer-preparation-tool/const"
 	"movie-transfer-preparation-tool/structs"
 	"movie-transfer-preparation-tool/validators"
+	"os"
 	"strings"
 	"time"
 )
@@ -35,6 +37,32 @@ func AddMovieOnClick() {
 	movieScreeningDateEntry.Validator = validators.DateTimeSpaced
 	movieDataForm.Append("Vorführungsdatum", movieScreeningDateEntry)
 
+	// create a dialog for selecting the file for the movie
+	movieFileSelectionButton := new(widget.Button)
+	movieFileSelectionButton.SetText("Auswählen")
+	movieFileSelectionButton.Importance = widget.HighImportance
+	movieFileSelectionButton.OnTapped = func() {
+		// show a dialog to select the file for the movie
+		dialog.ShowFileOpen(func(closer fyne.URIReadCloser, err error) {
+			if err != nil {
+				log.Error().Err(err).Msg("unable to select file for movie")
+				return
+			}
+			if closer != nil {
+				defer closer.Close()
+				newMovie.VideoFile.Path = closer.URI().Path()
+				newMovie.VideoFile.Extension = closer.URI().Extension()
+				// now calculate the size of the file using os.Stat
+				fileStat, _ := os.Stat(newMovie.VideoFile.Path)
+				newMovie.VideoFile.Size = fileStat.Size()
+				movieFileSelectionButton.SetText(newMovie.VideoFile.Path)
+				movieFileSelectionButton.Disable()
+			} else {
+				log.Info().Msg("no file was selected")
+			}
+		}, MainWindow)
+	}
+	movieDataForm.Append("Datei für Film", movieFileSelectionButton)
 	// get the names of the languages and prepend the option NONE to the selection
 	languageSelectionOptions := append([]string{"NONE"}, iso6391.Names...)
 
@@ -64,6 +92,31 @@ func AddMovieOnClick() {
 	}
 	movieDataForm.Append("Sprache der Tonspur", audioLanguageSelect)
 
+	subtitleFileSelectionButton := new(widget.Button)
+	subtitleFileSelectionButton.SetText("Auswählen")
+	subtitleFileSelectionButton.Importance = widget.HighImportance
+	subtitleFileSelectionButton.OnTapped = func() {
+		// show a dialog to select the file for the movie
+		dialog.ShowFileOpen(func(closer fyne.URIReadCloser, err error) {
+			if err != nil {
+				log.Error().Err(err).Msg("unable to select file for subtitle")
+				return
+			}
+			if closer != nil {
+				defer closer.Close()
+				newMovie.SubtitleFile.Path = closer.URI().Path()
+				newMovie.SubtitleFile.Extension = closer.URI().Extension()
+				// now calculate the size of the file using os.Stat
+				fileStat, _ := os.Stat(newMovie.VideoFile.Path)
+				newMovie.SubtitleFile.Size = fileStat.Size()
+				subtitleFileSelectionButton.SetText(newMovie.SubtitleFile.Path)
+				subtitleFileSelectionButton.Disable()
+			} else {
+				log.Info().Msg("no file was selected")
+			}
+		}, MainWindow)
+	}
+	movieDataForm.Append("Datei für Untertitel", subtitleFileSelectionButton)
 	subtitleLanguageSelect := xwidget.NewCompletionEntry(languageSelectionOptions)
 	subtitleLanguageSelect.OnChanged = func(s string) {
 		if len(s) < 2 {
