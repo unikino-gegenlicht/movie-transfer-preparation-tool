@@ -1,4 +1,4 @@
-name: build-linux-release
+name: build-releases
 run-name: Building Releases of ${{ github.repository }}
 on:
   push:
