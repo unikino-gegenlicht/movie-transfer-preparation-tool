@@ -130,10 +130,44 @@ func init() {
 		ui.AddMovieOnClick)
 	addMovieButton.Importance = widget.HighImportance
 
+	// now create the table which is used to display the recorded movies
+	movieDataTable := widget.NewTable(
+		func() (int, int) {
+			// make the table 4 columns width and as long as the stored movies plus one to always display the header
+			return bindings.Movies.Length() + 1, 4
+		},
+		func() fyne.CanvasObject {
+			label := widget.NewLabel("Template")
+			label.Resize(fyne.NewSize(180, 20))
+			return label
+		}, func(id widget.TableCellID, object fyne.CanvasObject) {
+			// typecast the generic object to a label
+			l := object.(*widget.Label)
+			// now check if this is the very first row to allow the output of the header
+			if id.Row == 0 {
+				// now switch around the columns to set up the header
+				l.TextStyle.Bold = true
+				switch id.Col {
+				case 0:
+					l.SetText("Titel")
+					break
+				case 1:
+					l.SetText("Datum")
+					break
+				case 2:
+					l.SetText("Sprache")
+					break
+				case 3:
+					l.SetText("Untertitel")
+					break
+				}
+			}
+		})
+
 	mainWindowHeader := container.New(layout.NewVBoxLayout(), ui.SemesterDataForm, addMovieButton)
 
 	mainContent := container.New(layout.NewBorderLayout(mainWindowHeader, nil, nil, nil),
-		mainWindowHeader)
+		mainWindowHeader, movieDataTable)
 	ui.MainWindow.SetContent(mainContent)
 	ui.MainWindow.SetMaster()
 	ui.MainWindow.SetIcon(resources.AppIcon)
