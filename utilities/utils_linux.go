@@ -40,7 +40,6 @@ func GetAvailableSpace(mountPath string) uint64 {
 	var stat syscall.Statfs_t
 	err := syscall.Statfs(mountPath, &stat)
 	if err != nil {
-		fmt.Println(err)
 		return 0
 	}
 
