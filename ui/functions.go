@@ -160,7 +160,7 @@ func AddMovieOnClick() {
 				newMovie.AudioLanguage = &al
 			}
 			// get the name of the language and put it into the movie
-			subLang := audioLanguageSelect.Text
+			subLang := subtitleLanguageSelect.Text
 			if subLang == "NONE" {
 				newMovie.SubtitleLanguage = nil
 			} else {

@@ -131,7 +131,7 @@ func init() {
 		c, _ := bindings.Configuration.Get()
 		config := c.(*structs.Configuration)
 		// now try to parse the date
-		t, err := time.Parse(consts.DateTimeFormat, s)
+		t, err := time.Parse(consts.DateFormat, s)
 		if err != nil {
 			return
 		}
@@ -146,7 +146,7 @@ func init() {
 		c, _ := bindings.Configuration.Get()
 		config := c.(*structs.Configuration)
 		// now try to parse the date
-		t, err := time.Parse(consts.DateTimeFormat, s)
+		t, err := time.Parse(consts.DateFormat, s)
 		if err != nil {
 			return
 		}

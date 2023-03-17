@@ -7,6 +7,7 @@ require github.com/rs/zerolog v1.29.0
 require (
 	fyne.io/fyne/v2 v2.3.1
 	fyne.io/x/fyne v0.0.0-20230128220048-43a1c4cd1ed8
+	github.com/BurntSushi/toml v1.1.0
 	github.com/emvi/iso-639-1 v1.1.0
 	github.com/pkg/errors v0.9.1
 	golang.org/x/image v0.0.0-20220601225756-64ec528b34cd
