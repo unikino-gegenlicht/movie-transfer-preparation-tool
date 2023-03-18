@@ -34,32 +34,32 @@ jobs:
           name: linuxExecutable
           path: fyne-cross/dist/linux-amd64/movie-transfer-preparation-tool.tar.xz
 
-    build-application-for-windows:
-      runs-on: ubuntu-latest
-      name: Build Application for Windows
+  build-application-for-windows:
+    runs-on: ubuntu-latest
+    name: Build Application for Windows
 
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            lfs: true
-        - uses: actions/setup-go@v4
-          with:
-            go-version: 'stable'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          lfs: true
+      - uses: actions/setup-go@v4
+        with:
+          go-version: 'stable'
 
-        - name: Get Golang dependencies
-          run: go get -v -t -d ./...
+      - name: Get Golang dependencies
+        run: go get -v -t -d ./...
 
-        - name: Install Fyne.io
-          run: go install github.com/fyne-io/fyne-cross@latest
+      - name: Install Fyne.io
+        run: go install github.com/fyne-io/fyne-cross@latest
 
-        - name: Build for Linux
-          run: fyne-cross windows
+      - name: Build for Linux
+        run: fyne-cross windows
 
-        - name: Upload Linux artifact
-          uses: actions/upload-artifact@v3
-          with:
-            name: windowsExecutable
-            path: fyne-cross/dist/linux-amd64/movie-transfer-preparation-tool.exe.zip
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windowsExecutable
+          path: fyne-cross/dist/linux-amd64/movie-transfer-preparation-tool.exe.zip
 
 
 
