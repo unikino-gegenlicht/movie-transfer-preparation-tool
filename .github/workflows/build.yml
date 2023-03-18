@@ -27,7 +27,7 @@ jobs:
         run: go install github.com/fyne-io/fyne-cross@latest
 
       - name: Build for Linux
-        run: fyne-cross linux
+        run: fyne-cross linux -env "GOFLAGS=-buildvcs=false"
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v3
@@ -38,6 +38,8 @@ jobs:
   build-application-for-windows:
     runs-on: ubuntu-latest
     name: Build Application for Windows
+    env:
+      GOFLAGS: -buildvcs=false
 
     steps:
       - uses: actions/checkout@v3
@@ -55,7 +57,7 @@ jobs:
         run: go install github.com/fyne-io/fyne-cross@latest
 
       - name: Build for Windows
-        run: fyne-cross windows
+        run: fyne-cross windows -env "GOFLAGS=-buildvcs=false"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v3
